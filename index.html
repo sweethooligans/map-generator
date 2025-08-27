@@ -13,116 +13,267 @@
 </head>
 <body>
 <p class="p1">&lt;!DOCTYPE html&gt;</p>
-<p class="p1">&lt;html&gt;</p>
+<p class="p1">&lt;html lang="en"&gt;</p>
 <p class="p1">&lt;head&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Sweet Hooligans Map Generator&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta charset="utf-8" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;title&gt;Sweet Hooligans – Map Generator&lt;/title&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;</p>
 <p class="p1"><span class="Apple-converted-space">  </span>&lt;style&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>body { font-family: Arial, sans-serif; text-align: center; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#map { height: 600px; width: 800px; margin: 0 auto; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>#address-form { margin: 15px; }</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tabs button {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>margin: 5px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>padding: 10px 15px;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>cursor: pointer;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border: none;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>background: #ddd;</p>
-<p class="p1"><span class="Apple-converted-space">      </span>border-radius: 5px;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>:root{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--ui-bg: rgba(24,24,27,.7);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--ui-border: rgba(255,255,255,.15);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--ui-text: #fff;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>--accent: #4CAF50;</p>
 <p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p1"><span class="Apple-converted-space">    </span>.tabs button.active { background: #4CAF50; color: white; }</p>
+<p class="p1"><span class="Apple-converted-space">    </span>html,body{height:100%;margin:0}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0b0b0d;color:#fff;overflow:hidden}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>#map{position:fixed;inset:0}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>/* Top control bar */</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.controls{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position:fixed;top:12px;left:50%;transform:translateX(-50%);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display:flex;gap:10px;align-items:center;flex-wrap:wrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--ui-bg);backdrop-filter: blur(8px);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);border-radius:12px;padding:10px 12px;z-index:10</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.controls input[type="text"]{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>width:min(58vw,520px);max-width:90vw;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:rgba(255,255,255,.08);color:var(--ui-text);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);outline:none;border-radius:10px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 12px;font-size:16px</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>appearance:none;border:none;border-radius:10px;cursor:pointer;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:10px 12px;font-weight:600;font-size:14px;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:rgba(255,255,255,.1);color:var(--ui-text);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);transition:transform .05s ease, background .2s</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn:active{transform:translateY(1px)}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.btn.primary{background:var(--accent)}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tabs{display:flex;gap:6px}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tab{padding:8px 10px;border-radius:10px;border:1px solid var(--ui-border);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:rgba(255,255,255,.08);cursor:pointer;font-size:13px}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.tab.active{background:var(--accent);color:#fff}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>/* Bottom bar */</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.bottom-bar{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position:fixed;bottom:12px;left:50%;transform:translateX(-50%);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>display:flex;gap:8px;align-items:center;flex-wrap:wrap;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--ui-bg);backdrop-filter: blur(8px);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);border-radius:12px;padding:8px 10px;z-index:10</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.note{</p>
+<p class="p1"><span class="Apple-converted-space">      </span>position:fixed;right:12px;bottom:12px;font-size:12px;opacity:.75;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>background:var(--ui-bg);border:1px solid var(--ui-border);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>padding:6px 8px;border-radius:10px</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>.spinner{width:18px;height:18px;border:3px solid rgba(255,255,255,.25);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;display:none}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>@keyframes spin{to{transform:rotate(360deg)}}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>@media (max-width:640px){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>.controls input[type="text"]{width:58vw}</p>
+<p class="p1"><span class="Apple-converted-space">      </span>.tabs{width:100%;justify-content:center}</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
 <p class="p1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</p>
 <p class="p1">&lt;/head&gt;</p>
 <p class="p1">&lt;body&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;h2&gt;Sweet Hooligans – Map Design Generator&lt;/h2&gt;</p>
-<p class="p2"><span class="Apple-converted-space">  </span></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;form id="address-form"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;label for="address"&gt;Enter an address:&lt;/label&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;input type="text" id="address" name="address" size="40"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button type="submit"&gt;Search&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/form&gt;</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="tabs"&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="style1" class="active"&gt;Map Style 1&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="style2"&gt;Map Style 2&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>&lt;button id="style3"&gt;Map Style 3&lt;/button&gt;</p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
-<p class="p2"><br></p>
 <p class="p1"><span class="Apple-converted-space">  </span>&lt;div id="map"&gt;&lt;/div&gt;</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- IMPORTANT: Replace YOUR_API_KEY with your actual Google Maps API key --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Top controls --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="controls"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;form id="address-form" style="display:contents"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;input id="address" type="text" placeholder="Enter address (e.g., 1600 Pennsylvania Ave NW, DC)" /&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="btn primary" id="searchBtn" type="submit"&gt;Search&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/form&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="tabs" aria-label="Map Styles"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="tab active" data-style="style1"&gt;Style 1&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="tab" data-style="style2"&gt;Style 2&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>&lt;button class="tab" data-style="style3"&gt;Style 3&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;div class="spinner" id="spinner" aria-hidden="true"&gt;&lt;/div&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Bottom bar --&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="bottom-bar"&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn" id="zoomOut"&gt;−&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;span id="zoomLevel" style="min-width:3ch;text-align:center"&gt;12&lt;/span&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn" id="zoomIn"&gt;+&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn" id="centerMarker"&gt;Center to Marker&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>&lt;button class="btn primary" id="downloadBtn"&gt;Download PNG&lt;/button&gt;</p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;div class="note"&gt;Tip: drag the heart to fine-tune the location.&lt;/div&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!-- Google Maps JS API (replace YOUR_API_KEY) --&gt;</p>
 <p class="p1"><span class="Apple-converted-space">  </span>&lt;script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&amp;callback=initMap" async defer&gt;&lt;/script&gt;</p>
 <p class="p1"><span class="Apple-converted-space">  </span>&lt;script&gt;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let map, marker, geocoder;</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let mapStyles = {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>// === CONFIG ===</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const MAP_IDS = {</p>
 <p class="p1"><span class="Apple-converted-space">      </span>style1: "e39caf81ba4082b8",</p>
 <p class="p1"><span class="Apple-converted-space">      </span>style2: "7c3917b8837ac562",</p>
 <p class="p1"><span class="Apple-converted-space">      </span>style3: "d9bd015cd976b393"</p>
 <p class="p1"><span class="Apple-converted-space">    </span>};</p>
-<p class="p1"><span class="Apple-converted-space">    </span>let currentStyle = mapStyles.style1;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const HEART_ICON = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heart_coraz%C3%B3n.svg/1920px-Heart_coraz%C3%B3n.svg.png";</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const DEFAULT_CENTER = { lat: 40.7128, lng: -74.0060 }; // NYC fallback</p>
+<p class="p1"><span class="Apple-converted-space">    </span>const DEFAULT_ZOOM = 12;</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function initMap() {</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let map, marker, geocoder;</p>
+<p class="p1"><span class="Apple-converted-space">    </span>let currentStyleKey = "style1";</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function initMap(){</p>
 <p class="p1"><span class="Apple-converted-space">      </span>geocoder = new google.maps.Geocoder();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>map = new google.maps.Map(document.getElementById('map'), {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>center: {lat: 40.7128, lng: -74.0060}, // default center (NYC)</p>
-<p class="p1"><span class="Apple-converted-space">        </span>zoom: 12,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>mapId: currentStyle,</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>map = new google.maps.Map(document.getElementById("map"), {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>center: DEFAULT_CENTER,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>zoom: DEFAULT_ZOOM,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>mapId: MAP_IDS[currentStyleKey],</p>
 <p class="p1"><span class="Apple-converted-space">        </span>mapTypeControl: false,</p>
 <p class="p1"><span class="Apple-converted-space">        </span>streetViewControl: false,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>fullscreenControl: false,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>clickableIcons: false</p>
 <p class="p1"><span class="Apple-converted-space">      </span>});</p>
 <p class="p2"><br></p>
 <p class="p1"><span class="Apple-converted-space">      </span>marker = new google.maps.Marker({</p>
-<p class="p1"><span class="Apple-converted-space">        </span>position: map.getCenter(),</p>
-<p class="p1"><span class="Apple-converted-space">        </span>map: map,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>icon: {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>url: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heart_corazón.svg/1920px-Heart_corazón.svg.png',</p>
-<p class="p1"><span class="Apple-converted-space">          </span>scaledSize: new google.maps.Size(30, 30),</p>
-<p class="p1"><span class="Apple-converted-space">        </span>},</p>
+<p class="p1"><span class="Apple-converted-space">        </span>position: DEFAULT_CENTER,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>map,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>draggable: true,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>icon: { url: HEART_ICON, scaledSize: new google.maps.Size(34,34) },</p>
+<p class="p1"><span class="Apple-converted-space">        </span>title: "Drag me to adjust"</p>
 <p class="p1"><span class="Apple-converted-space">      </span>});</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById('address-form').addEventListener('submit', function(e) {</p>
+<p class="p1"><span class="Apple-converted-space">      </span>map.addListener("zoom_changed", () =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>document.getElementById("zoomLevel").textContent = map.getZoom();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Search submit</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("address-form").addEventListener("submit", (e)=&gt;{</p>
 <p class="p1"><span class="Apple-converted-space">        </span>e.preventDefault();</p>
-<p class="p1"><span class="Apple-converted-space">        </span>let address = document.getElementById('address').value;</p>
-<p class="p1"><span class="Apple-converted-space">        </span>geocodeAddress(address);</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">      </span>setupTabs();</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function geocodeAddress(address) {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>geocoder.geocode({'address': address}, function(results, status) {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>if (status === 'OK') {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>map.setCenter(results[0].geometry.location);</p>
-<p class="p1"><span class="Apple-converted-space">          </span>marker.setPosition(results[0].geometry.location);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>} else {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>alert('Geocode failed: ' + status);</p>
-<p class="p1"><span class="Apple-converted-space">        </span>}</p>
-<p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">    </span>}</p>
-<p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function setupTabs() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>document.querySelectorAll('.tabs button').forEach(btn =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>btn.addEventListener('click', () =&gt; {</p>
-<p class="p1"><span class="Apple-converted-space">          </span>document.querySelectorAll('.tabs button').forEach(b =&gt; b.classList.remove('active'));</p>
-<p class="p1"><span class="Apple-converted-space">          </span>btn.classList.add('active');</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (btn.id === "style1") currentStyle = mapStyles.style1;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (btn.id === "style2") currentStyle = mapStyles.style2;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>if (btn.id === "style3") currentStyle = mapStyles.style3;</p>
-<p class="p1"><span class="Apple-converted-space">          </span>switchStyle();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>const addr = document.getElementById("address").value.trim();</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(!addr) return;</p>
+<p class="p1"><span class="Apple-converted-space">        </span>showSpinner(true);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>geocoder.geocode({ address: addr }, (results, status)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">          </span>showSpinner(false);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>if(status === "OK" &amp;&amp; results[0]){</p>
+<p class="p1"><span class="Apple-converted-space">            </span>const loc = results[0].geometry.location;</p>
+<p class="p1"><span class="Apple-converted-space">            </span>map.panTo(loc);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>marker.setPosition(loc);</p>
+<p class="p1"><span class="Apple-converted-space">            </span>if(map.getZoom() &lt; 14) map.setZoom(14);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}else{</p>
+<p class="p1"><span class="Apple-converted-space">            </span>alert("Address not found: " + status);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>}</p>
 <p class="p1"><span class="Apple-converted-space">        </span>});</p>
 <p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Tabs (styles)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.querySelectorAll(".tab").forEach(btn=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>btn.addEventListener("click", ()=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">          </span>document.querySelectorAll(".tab").forEach(b=&gt;b.classList.remove("active"));</p>
+<p class="p1"><span class="Apple-converted-space">          </span>btn.classList.add("active");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>currentStyleKey = btn.dataset.style;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>// Swap style by rebuilding map options for reliability</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const center = map.getCenter();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const zoom = map.getZoom();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>map.setOptions({ mapId: MAP_IDS[currentStyleKey] });</p>
+<p class="p1"><span class="Apple-converted-space">          </span>map.setCenter(center);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>map.setZoom(zoom);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>marker.setMap(map);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Zoom controls</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("zoomIn").addEventListener("click", ()=&gt; map.setZoom(map.getZoom()+1));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("zoomOut").addEventListener("click", ()=&gt; map.setZoom(map.getZoom()-1));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("centerMarker").addEventListener("click", ()=&gt; map.panTo(marker.getPosition()));</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Download Static Map</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("downloadBtn").addEventListener("click", downloadStaticPNG);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Keyboard UX</p>
+<p class="p1"><span class="Apple-converted-space">      </span>document.getElementById("address").addEventListener("keydown", (e)=&gt;{</p>
+<p class="p1"><span class="Apple-converted-space">        </span>if(e.key === "Enter"){ /* handled by form submit */ }</p>
+<p class="p1"><span class="Apple-converted-space">      </span>});</p>
 <p class="p1"><span class="Apple-converted-space">    </span>}</p>
 <p class="p2"><br></p>
-<p class="p1"><span class="Apple-converted-space">    </span>function switchStyle() {</p>
-<p class="p1"><span class="Apple-converted-space">      </span>let center = map.getCenter();</p>
-<p class="p1"><span class="Apple-converted-space">      </span>map = new google.maps.Map(document.getElementById('map'), {</p>
-<p class="p1"><span class="Apple-converted-space">        </span>center: center,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>zoom: 12,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>mapId: currentStyle,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>mapTypeControl: false,</p>
-<p class="p1"><span class="Apple-converted-space">        </span>streetViewControl: false,</p>
+<p class="p1"><span class="Apple-converted-space">    </span>function showSpinner(show){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const s = document.getElementById("spinner");</p>
+<p class="p1"><span class="Apple-converted-space">      </span>s.style.display = show ? "inline-block" : "none";</p>
+<p class="p1"><span class="Apple-converted-space">      </span>s.setAttribute("aria-hidden", show ? "false" : "true");</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function clamp(val, min, max){ return Math.max(min, Math.min(max, val)); }</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function downloadStaticPNG(){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Build a Static Maps URL that mirrors the current view.</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const center = map.getCenter();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const lat = center.lat();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const lng = center.lng();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const zoom = clamp(map.getZoom(), 0, 21);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Fit within free static size limits: 640x640 with scale=2 =&gt; 1280px output</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const viewport = getViewportSize();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const maxBase = 640;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Preserve aspect ratio of the viewport</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let w = Math.min(maxBase, Math.round(viewport.w));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>let h = Math.min(maxBase, Math.round(viewport.h));</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// avoid zero or tiny</p>
+<p class="p1"><span class="Apple-converted-space">      </span>w = Math.max(320, w);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>h = Math.max(320, h);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>const markerPos = marker.getPosition();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const iconUrl = encodeURIComponent(HEART_ICON);</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const markers = `markers=icon:${iconUrl}|${markerPos.lat()},${markerPos.lng()}`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// If your project has Static Maps enabled with map styles in Cloud, you can pass map_id</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const params = new URLSearchParams({</p>
+<p class="p1"><span class="Apple-converted-space">        </span>center: `${lat},${lng}`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>zoom: String(zoom),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>size: `${w}x${h}`,</p>
+<p class="p1"><span class="Apple-converted-space">        </span>scale: "2",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>format: "png",</p>
+<p class="p1"><span class="Apple-converted-space">        </span>map_id: MAP_IDS[currentStyleKey],</p>
+<p class="p1"><span class="Apple-converted-space">        </span>key: "YOUR_API_KEY"</p>
 <p class="p1"><span class="Apple-converted-space">      </span>});</p>
-<p class="p1"><span class="Apple-converted-space">      </span>marker.setMap(map);</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Compose URL</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const url = `https://maps.googleapis.com/maps/api/staticmap?${params.toString()}&amp;${markers}`;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Trigger download (prefer fetch to force "download" filename)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>fetch(url)</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.then(r =&gt; r.blob())</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.then(blob =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const a = document.createElement("a");</p>
+<p class="p1"><span class="Apple-converted-space">          </span>const styleLabel = currentStyleKey.toUpperCase();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>a.href = URL.createObjectURL(blob);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>a.download = `sweet-hooligans-map-${styleLabel}-${Date.now()}.png`;</p>
+<p class="p1"><span class="Apple-converted-space">          </span>document.body.appendChild(a);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>a.click();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>a.remove();</p>
+<p class="p1"><span class="Apple-converted-space">          </span>URL.revokeObjectURL(a.href);</p>
+<p class="p1"><span class="Apple-converted-space">        </span>})</p>
+<p class="p1"><span class="Apple-converted-space">        </span>.catch(err =&gt; {</p>
+<p class="p1"><span class="Apple-converted-space">          </span>console.error(err);</p>
+<p class="p1"><span class="Apple-converted-space">          </span>// If fetch is blocked by CORS, fallback to opening the URL in a new tab</p>
+<p class="p1"><span class="Apple-converted-space">          </span>window.open(url, "_blank");</p>
+<p class="p1"><span class="Apple-converted-space">        </span>});</p>
+<p class="p1"><span class="Apple-converted-space">    </span>}</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">    </span>function getViewportSize(){</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Get visible map container size for better aspect matching</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const rect = document.getElementById("map").getBoundingClientRect();</p>
+<p class="p1"><span class="Apple-converted-space">      </span>// Leave some margin so UI isn't cropped when composing</p>
+<p class="p1"><span class="Apple-converted-space">      </span>const margin = 40;</p>
+<p class="p1"><span class="Apple-converted-space">      </span>return {</p>
+<p class="p1"><span class="Apple-converted-space">        </span>w: Math.max(320, rect.width - margin),</p>
+<p class="p1"><span class="Apple-converted-space">        </span>h: Math.max(320, rect.height - margin)</p>
+<p class="p1"><span class="Apple-converted-space">      </span>};</p>
 <p class="p1"><span class="Apple-converted-space">    </span>}</p>
 <p class="p1"><span class="Apple-converted-space">  </span>&lt;/script&gt;</p>
+<p class="p2"><br></p>
+<p class="p1"><span class="Apple-converted-space">  </span>&lt;!--</p>
+<p class="p1"><span class="Apple-converted-space">    </span>Notes:</p>
+<p class="p1"><span class="Apple-converted-space">    </span>- Replace YOUR_API_KEY (in both script tag and downloadStaticPNG) with your real key.</p>
+<p class="p1"><span class="Apple-converted-space">    </span>- Ensure the following APIs are enabled for your key: Maps JavaScript API, Geocoding API, Static Maps API.</p>
+<p class="p1"><span class="Apple-converted-space">    </span>- Under Key Restrictions, add allowed referrers:</p>
+<p class="p1"><span class="Apple-converted-space">        </span>https://sweethooligans.github.io/*</p>
+<p class="p1"><span class="Apple-converted-space">        </span>https://maps.sweethooligans.design/*</p>
+<p class="p1"><span class="Apple-converted-space">    </span>- Static Maps honors your Cloud-based styles via map_id (your three map IDs are wired above).</p>
+<p class="p1"><span class="Apple-converted-space">  </span>--&gt;</p>
 <p class="p1">&lt;/body&gt;</p>
 <p class="p1">&lt;/html&gt;</p>
 </body>
