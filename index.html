@@ -8,10 +8,97 @@
   <meta name="CocoaVersion" content="2113.65">
   <style type="text/css">
     p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000}
+    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 12.0px Times; -webkit-text-stroke: #000000; min-height: 14.0px}
     span.s1 {font-kerning: none}
   </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt; &lt;html lang="en"&gt; &lt;head&gt; &lt;meta charset="utf-8" /&gt; &lt;title&gt;Sweet Hooligans – Map Generator&lt;/title&gt; &lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt; &lt;style&gt; :root{ --ui-bg: rgba(24,24,27,.7); --ui-border: rgba(255,255,255,.15); --ui-text: #fff; --accent: #4CAF50; } html,body{height:100%;margin:0} body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0b0b0d;color:#fff;overflow:hidden} #map{position:fixed;inset:0} .controls{ position:fixed;top:12px;left:50%;transform:translateX(-50%); display:flex;gap:10px;align-items:center;flex-wrap:wrap; background:var(--ui-bg);backdrop-filter: blur(8px); border:1px solid var(--ui-border);border-radius:12px;padding:10px 12px;z-index:10 } .controls input[type="text"]{ width:min(58vw,520px);max-width:90vw; background:rgba(255,255,255,.08);color:var(--ui-text); border:1px solid var(--ui-border);outline:none;border-radius:10px; padding:10px 12px;font-size:16px } .btn{ appearance:none;border:none;border-radius:10px;cursor:pointer; padding:10px 12px;font-weight:600;font-size:14px; background:rgba(255,255,255,.1);color:var(--ui-text); border:1px solid var(--ui-border);transition:transform .05s ease, background .2s } .btn:active{transform:translateY(1px)} .btn.primary{background:var(--accent)} .tabs{display:flex;gap:6px} .tab{padding:8px 10px;border-radius:10px;border:1px solid var(--ui-border); background:rgba(255,255,255,.08);cursor:pointer;font-size:13px} .tab.active{background:var(--accent);color:#fff} .bottom-bar{ position:fixed;bottom:12px;left:50%;transform:translateX(-50%); display:flex;gap:8px;align-items:center;flex-wrap:wrap; background:var(--ui-bg);backdrop-filter: blur(8px); border:1px solid var(--ui-border);border-radius:12px;padding:8px 10px;z-index:10 } .note{ position:fixed;right:12px;bottom:12px;font-size:12px;opacity:.75; background:var(--ui-bg);border:1px solid var(--ui-border); padding:6px 8px;border-radius:10px } .spinner{width:18px;height:18px;border:3px solid rgba(255,255,255,.25); border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;display:none} @keyframes spin{to{transform:rotate(360deg)}} @media (max-width:640px){ .controls input[type="text"]{width:58vw} .tabs{width:100%;justify-content:center} } &lt;/style&gt; &lt;/head&gt; &lt;body&gt; &lt;div id="map"&gt;&lt;/div&gt; &lt;div class="controls"&gt; &lt;form id="address-form" style="display:contents"&gt; &lt;input id="address" type="text" placeholder="Enter address (e.g., 1600 Pennsylvania Ave NW, DC)" /&gt; &lt;button class="btn primary" id="searchBtn" type="submit"&gt;Search&lt;/button&gt; &lt;/form&gt; &lt;div class="tabs" aria-label="Map Styles"&gt; &lt;button class="tab active" data-style="style1"&gt;Style 1&lt;/button&gt; &lt;button class="tab" data-style="style2"&gt;Style 2&lt;/button&gt; &lt;button class="tab" data-style="style3"&gt;Style 3&lt;/button&gt; &lt;/div&gt; &lt;div class="spinner" id="spinner" aria-hidden="true"&gt;&lt;/div&gt; &lt;/div&gt; &lt;div class="bottom-bar"&gt; &lt;button class="btn" id="zoomOut"&gt;−&lt;/button&gt; &lt;span id="zoomLevel" style="min-width:3ch;text-align:center"&gt;12&lt;/span&gt; &lt;button class="btn" id="zoomIn"&gt;+&lt;/button&gt; &lt;button class="btn" id="centerMarker"&gt;Center to Marker&lt;/button&gt; &lt;button class="btn primary" id="downloadBtn"&gt;Download PNG&lt;/button&gt; &lt;/div&gt; &lt;div class="note"&gt;Tip: drag the heart to fine-tune the location.&lt;/div&gt; &lt;!-- Google Maps JS API (API key inserted) --&gt; &lt;script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZskz6npeseDRcPLDbqaZZjwStCrwC3BQ&amp;callback=initMap" async defer&gt;&lt;/script&gt; &lt;script&gt; const MAP_IDS = { style1: "e39caf81ba4082b8", style2: "7c3917b8837ac562", style3: "d9bd015cd976b393" }; const HEART_ICON = "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Heart_coraz%C3%B3n.svg/1920px-Heart_coraz%C3%B3n.svg.png"; const DEFAULT_CENTER = { lat: 40.7128, lng: -74.0060 }; const DEFAULT_ZOOM = 12; let map, marker, geocoder; let currentStyleKey = "style1"; function initMap(){ geocoder = new google.maps.Geocoder(); map = new google.maps.Map(document.getElementById("map"), { center: DEFAULT_CENTER, zoom: DEFAULT_ZOOM, mapId: MAP_IDS[currentStyleKey], mapTypeControl: false, streetViewControl: false, fullscreenControl: false, clickableIcons: false }); marker = new google.maps.Marker({ position: DEFAULT_CENTER, map, draggable: true, icon: { url: HEART_ICON, scaledSize: new google.maps.Size(34,34) }, title: "Drag me to adjust" }); map.addListener("zoom_changed", () =&gt; { document.getElementById("zoomLevel").textContent = map.getZoom(); }); document.getElementById("address-form").addEventListener("submit", (e)=&gt;{ e.preventDefault(); const addr = document.getElementById("address").value.trim(); if(!addr) return; showSpinner(true); geocoder.geocode({ address: addr }, (results, status)=&gt;{ showSpinner(false); if(status === "OK" &amp;&amp; results[0]){ const loc = results[0].geometry.location; map.panTo(loc); marker.setPosition(loc); if(map.getZoom() &lt; 14) map.setZoom(14); }else{ alert("Address not found: " + status); } }); }); document.querySelectorAll(".tab").forEach(btn=&gt;{ btn.addEventListener("click", ()=&gt;{ document.querySelectorAll(".tab").forEach(b=&gt;b.classList.remove("active")); btn.classList.add("active"); currentStyleKey = btn.dataset.style; const center = map.getCenter(); const zoom = map.getZoom(); map.setOptions({ mapId: MAP_IDS[currentStyleKey] }); map.setCenter(center); map.setZoom(zoom); marker.setMap(map); }); }); document.getElementById("zoomIn").addEventListener("click", ()=&gt; map.setZoom(map.getZoom()+1)); document.getElementById("zoomOut").addEventListener("click", ()=&gt; map.setZoom(map.getZoom()-1)); document.getElementById("centerMarker").addEventListener("click", ()=&gt; map.panTo(marker.getPosition())); document.getElementById("downloadBtn").addEventListener("click", downloadStaticPNG); } function showSpinner(show){ const s = document.getElementById("spinner"); s.style.display = show ? "inline-block" : "none"; s.setAttribute("aria-hidden", show ? "false" : "true"); } function clamp(val, min, max){ return Math.max(min, Math.min(max, val)); } function downloadStaticPNG(){ const center = map.getCenter(); const lat = center.lat(); const lng = center.lng(); const zoom = clamp(map.getZoom(), 0, 21); const viewport = getViewportSize(); const maxBase = 640; let w = Math.min(maxBase, Math.round(viewport.w)); let h = Math.min(maxBase, Math.round(viewport.h)); w = Math.max(320, w); h = Math.max(320, h); const markerPos = marker.getPosition(); const iconUrl = encodeURIComponent(HEART_ICON); const markers = `markers=icon:${iconUrl}|${markerPos.lat()},${markerPos.lng()}`; const params = new URLSearchParams({ center: `${lat},${lng}`, zoom: String(zoom), size: `${w}x${h}`, scale: "2", format: "png", map_id: MAP_IDS[currentStyleKey], key: "AIzaSyCZskz6npeseDRcPLDbqaZZjwStCrwC3BQ" }); const url = `https://maps.googleapis.com/maps/api/staticmap?${params.toString()}&amp;${markers}`; fetch(url) .then(r =&gt; r.blob()) .then(blob =&gt; { const a = document.createElement("a"); const styleLabel = currentStyleKey.toUpperCase(); a.href = URL.createObjectURL(blob); a.download = `sweet-hooligans-map-${styleLabel}-${Date.now()}.png`; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(a.href); }) .catch(err =&gt; { console.error(err); window.open(url, "_blank"); }); } function getViewportSize(){ const rect = document.getElementById("map").getBoundingClientRect(); const margin = 40; return { w: Math.max(320, rect.width - margin), h: Math.max(320, rect.height - margin) }; } &lt;/script&gt; &lt;!-- Security tips: - Restrict this key to these referrers: https://sweethooligans.github.io/* https://maps.sweethooligans.design/* - APIs enabled: Maps JavaScript API, Geocoding API, Static Maps API. --&gt; &lt;/body&gt; &lt;/html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta charset="utf-8" /&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;title&gt;Sweet Hooligans – Map Generator&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;style&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>:root{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>--ui-bg: rgba(24,24,27,.7);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>--ui-border: rgba(255,255,255,.15);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>--ui-text: #fff;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>--accent: #4CAF50;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>html,body{height:100%;margin:0}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#0b0b0d;color:#fff;overflow:hidden}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>#map{position:fixed;inset:0}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.controls{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>position:fixed;top:12px;left:50%;transform:translateX(-50%);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display:flex;gap:10px;align-items:center;flex-wrap:wrap;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background:var(--ui-bg);backdrop-filter: blur(8px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);border-radius:12px;padding:10px 12px;z-index:10</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.controls input[type="text"]{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>width:min(58vw,520px);max-width:90vw;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background:rgba(255,255,255,.08);color:var(--ui-text);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);outline:none;border-radius:10px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding:10px 12px;font-size:16px</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.btn{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>appearance:none;border:none;border-radius:10px;cursor:pointer;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding:10px 12px;font-weight:600;font-size:14px;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background:rgba(255,255,255,.1);color:var(--ui-text);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);transition:transform .05s ease, background .2s</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.btn:active{transform:translateY(1px)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.btn.primary{background:var(--accent)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.tabs{display:flex;gap:6px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.tab{padding:8px 10px;border-radius:10px;border:1px solid var(--ui-border);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background:rgba(255,255,255,.08);cursor:pointer;font-size:13px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.tab.active{background:var(--accent);color:#fff}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.bottom-bar{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>position:fixed;bottom:12px;left:50%;transform:translateX(-50%);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>display:flex;gap:8px;align-items:center;flex-wrap:wrap;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background:var(--ui-bg);backdrop-filter: blur(8px);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border:1px solid var(--ui-border);border-radius:12px;padding:8px 10px;z-index:10</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.note{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>position:fixed;right:12px;bottom:12px;font-size:12px;opacity:.75;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>background:var(--ui-bg);border:1px solid var(--ui-border);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>padding:6px 8px;border-radius:10px</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.spinner{width:18px;height:18px;border:3px solid rgba(255,255,255,.25);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>border-top-color:#fff;border-radius:50%;animation:spin 1s linear infinite;display:none}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>@keyframes spin{to{transform:rotate(360deg)}}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>@media (max-width:640px){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>.controls input[type="text"]{width:58vw}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>.tabs{width:100%;justify-content:center}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div id="map"&gt;&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="controls"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;form id="address-form" style="display:contents"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;input id="address" type="text" placeholder="Enter address (e.g., 1600 Pennsylvania Ave NW, DC)" /&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button class="btn primary" id="searchBtn" type="submit"&gt;Search&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/form&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="tabs" aria-label="Map Styles"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button class="tab active" data-style="style1"&gt;Style 1&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button class="tab" data-style="style2"&gt;Style 2&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;button class="tab" data-style="style3"&gt;Style 3&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="spinner" id="spinner" aria-hidden="true"&gt;&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="bottom-bar"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button class="btn" id="zoomOut"&gt;−&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;span id="zoomLevel" style="min-width:3ch;text-align:center"&gt;12&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button class="btn" id="zoomIn"&gt;+&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button class="btn" id="centerMarker"&gt;Center to Marker&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;button class="btn primary" id="downloadBtn"&gt;Download PNG&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="note"&gt;Tip: drag the heart to fine-tune the location.&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCZskz6npeseDRcPLDbqaZZjwStCrwC3BQ&amp;ca</span></p>
 </body>
 </html>
